@@ -21,6 +21,11 @@ export default {
             let isJSON = require('is-json');
             return isJSON(str, pass_object);
         }
+        Vue.prototype.$setFocus = function (ref) {
+            //seta focus no mozilla firefox e edge principalmente
+            const element = this.$refs[ref].$el.querySelector('input')
+            if (element) this.$nextTick(() => { element.focus() })
+        }
 
 
 
