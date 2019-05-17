@@ -26,6 +26,20 @@ export default {
             const element = this.$refs[ref].$el.querySelector('input')
             if (element) this.$nextTick(() => { element.focus() })
         }
+        Vue.prototype.$buscaItemDatatable = function (datatable, valor, campo='value') {
+            let indexItem = -1;
+            let result = datatable.filter( dtItem => {
+                if(dtItem[campo] == valor){
+                    indexItem = datatable.indexOf(dtItem)
+                    return datatable[indexItem];
+                }
+            });
+
+            return {
+                index: indexItem,
+                result: result.length ? result[0] : null,
+            }
+        }
 
 
 
