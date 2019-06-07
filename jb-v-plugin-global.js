@@ -4,19 +4,46 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 export default {
     // Tudo criado neste arquivo será global
     install (Vue, options) {
+        //================================================
         // 1.Variaveis
+        //================================================
+        /**
+         * ======================
+         * Expressoes regulares
+         * ======================
+         */
+        Vue.prototype.$buscarRegExp = function (tipo){
 
+            let regex = {
+                email: /^[^@]+@[^@]+\.[^@]+$/,
+                cpf: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
+                cnpj: /\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}/,
+                date_ptbr: /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)((19|20))(\d{2})$/,
+                date_us: /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/,
+                time: /^([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d))?$/,
+                datetime_us: /^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][\d]|3[01]) (00|[\d]|1[\d]|2[0-3]):([\d]|[0-5][\d])?:?([\d]|[0-5][\d])$/,
+            }
+
+            return regex[tipo]
+        }
+
+        //================================================
         // 2. Diretivas
+        //================================================
         Vue.directive('my-directive', {
             bind (el, binding, vnode, oldVnode) {}
         })
 
+        //================================================
         // 3. Opções no componente
+        //================================================
         Vue.mixin({
             created: function () {}
         })
 
+        //================================================
         // 4. Metodos
+        //================================================
         Vue.prototype.$isJson = function (str, pass_object) {
             let isJSON = require('is-json');
             return isJSON(str, pass_object);
@@ -26,10 +53,16 @@ export default {
             const element = this.$refs[ref].$el.querySelector('input')
             if (element) this.$nextTick(() => { element.focus() })
         }
-        Vue.prototype.$buscaItemDatatable = function (datatable, valor, campo='value') {
+        Vue.prototype.$buscaItemDatatable = function (datatable, valor_procurado, campo_de_busca='value', case_sensitive=false) {
+            if( ! case_sensitive){
+                valor_procurado = valor_procurado.toString().toUpperCase()
+            }
+
             let indexItem = -1;
             let result = datatable.filter( dtItem => {
-                if(dtItem[campo] == valor){
+                let dtitem_valor = ! case_sensitive ? dtItem[campo_de_busca].toString().toUpperCase() : dtItem[campo_de_busca]
+
+                if(dtitem_valor == valor_procurado){
                     indexItem = datatable.indexOf(dtItem)
                     return datatable[indexItem];
                 }
@@ -39,6 +72,35 @@ export default {
                 index: indexItem,
                 result: result.length ? result[0] : null,
             }
+        }
+        Vue.prototype.$redirecionar = function (url) {
+            window.location.href = url;
+        }
+        Vue.prototype.$removerAcentos = function (str) {
+            str.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        }
+        Vue.prototype.$criarObjetoMensagensForm = function (mensagens, tipo, detalhes) {
+            return {
+                mensagens: mensagens,
+                tipo: tipo,
+                detalhes: detalhes
+            }
+        },
+        Vue.prototype.$criarObjetoParaCombobox = function (obj, campo_text, campo_value){
+            let primeira_key = Object.keys(obj)[0]
+            let primeiro_item = obj[primeira_key]
+            let obj_valido = primeiro_item.hasOwnProperty(campo_text) && primeiro_item.hasOwnProperty(campo_value)
+
+            if( ! obj_valido){
+                return []
+            }
+
+            let array = [];
+            for (const item of obj ) {
+                array.push({text:item[campo_text], value:item[campo_value]})
+            }
+            return array;
         }
 
 
