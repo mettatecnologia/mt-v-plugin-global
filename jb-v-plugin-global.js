@@ -22,6 +22,7 @@ export default {
                 date_us: /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/,
                 time: /^([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d))?$/,
                 datetime_us: /^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][\d]|3[01]) (00|[\d]|1[\d]|2[0-3]):([\d]|[0-5][\d])?:?([\d]|[0-5][\d])$/,
+                espacos: /\s/g,
             }
 
             return regex[tipo]
@@ -86,7 +87,7 @@ export default {
                 tipo: tipo,
                 detalhes: detalhes
             }
-        },
+        }
         Vue.prototype.$criarObjetoParaCombobox = function (obj, campo_text, campo_value){
             let primeira_key = Object.keys(obj)[0]
             let primeiro_item = obj[primeira_key]
@@ -102,6 +103,40 @@ export default {
             }
             return array;
         }
+        Vue.prototype.$removerEspacos = function (string) {
+            let regex = this.$buscarRegExp('espacos')
+            return string.replace(regex, ''); //remove os espaços
+        }
+        Vue.prototype.$formataNumeroParaCartaoCredito = function (numero) {
+            var str = this.$removerEspacos(numero)
+            var numberChunks = str.match(/.{1,4}/g); //separa o numero em grupos de 4
+            var result = numberChunks.join(' ');
+            return result
+        }
+        Vue.prototype.$removerElementosVaziosArray = function (array) {
+            return array.filter(function (el) {
+                return !!el;
+            });
+        }
+        Vue.prototype.$passaDatetimeParaPtbr = function (datetime) {
+            if(this.$buscarRegExp('datetime_us').test(datetime) || this.$buscarRegExp('date_us').test(datetime)){
+                let [date, time] = datetime.split(' ')
+                datetime = [date.split('-').reverse().join('/'), time].join(' ')
+            }
+            return datetime;
+        }
+        Vue.prototype.$formataNumeroParaMoeda = function (value, digits) {
+            if(parseFloat(value)){
+                value = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                    minimumFractionDigits: digits || 2
+                }).format(value)
+            }
+
+            return value
+        }
+
 
 
 

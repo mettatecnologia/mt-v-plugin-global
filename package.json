@@ -1,6 +1,6 @@
 {
-  "name": "jb-v-plugin-global",
-  "version": "1.0.3",
+  "name": "@metta/mt-v-plugin-global",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jbmchd/jb-v-plugin-global.git"
+    "url": "git+https://github.com/mettatecnologia/mt-v-plugin-global.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jbmchd/jb-v-plugin-global/issues"
+    "url": "https://github.com/mettatecnologia/mt-v-plugin-global/issues"
   },
-  "homepage": "https://github.com/jbmchd/jb-v-plugin-global#readme",
+  "homepage": "https://github.com/mettatecnologia/mt-v-plugin-global#readme",
   "dependencies": {
     "is-json": "^2.0.1"
   }

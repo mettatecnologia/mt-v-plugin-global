@@ -1,2 +1,2 @@
-import JbVPluginGlobal from './jb-v-plugin-global'
-Vue.use(JbVPluginGlobal)
+import MtVPluginGlobal from './jb-v-plugin-global'
+Vue.use(MtVPluginGlobal)
