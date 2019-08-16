@@ -17,7 +17,7 @@ export default {
             let regex = {
                 email: /^[^@]+@[^@]+\.[^@]+$/,
                 cpf: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
-                cnpj: /\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}/,
+                cnpj: /\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/,
                 date_ptbr: /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)((19|20))(\d{2})$/,
                 date_us: /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/,
                 time: /^([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d))?$/,
@@ -49,11 +49,13 @@ export default {
             let isJSON = require('is-json');
             return isJSON(str, pass_object);
         }
-        Vue.prototype.$setFocus = function (ref) {
-            //seta focus no mozilla firefox e edge principalmente
-            const element = this.$refs[ref].$el.querySelector('input')
-            if (element) this.$nextTick(() => { element.focus() })
-        }
+        // Vue.prototype.$setFocus = function (ref) {
+        //     //seta focus no mozilla firefox e edge principalmente
+        //     console.log(this.$refs);
+
+        //     const element = this.$refs[ref].$el.querySelector('input')
+        //     if (element) this.$nextTick(() => { element.focus() })
+        // }
         Vue.prototype.$buscaItemDatatable = function (datatable, valor_procurado, campo_de_busca='value', case_sensitive=false) {
             if( ! case_sensitive){
                 valor_procurado = valor_procurado.toString().toUpperCase()
@@ -91,7 +93,7 @@ export default {
         Vue.prototype.$criarObjetoParaCombobox = function (obj, campo_text, campo_value){
             let primeira_key = Object.keys(obj)[0]
             let primeiro_item = obj[primeira_key]
-            let obj_valido = primeiro_item.hasOwnProperty(campo_text) && primeiro_item.hasOwnProperty(campo_value)
+            let obj_valido = {}.hasOwnProperty.call(primeiro_item, campo_text) && {}.hasOwnProperty.call(primeiro_item, campo_value)
 
             if( ! obj_valido){
                 return []
