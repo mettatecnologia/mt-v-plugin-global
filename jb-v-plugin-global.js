@@ -138,6 +138,17 @@ export default {
 
             return value
         }
+        Vue.prototype.$typeof = function (v, eTipo){
+            let tipo = typeof v
+            if(tipo=='object' && Array.isArray(v))
+            {
+                tipo = 'array'
+            }
+            if(eTipo){
+                return eTipo === tipo
+            }
+            return tipo
+        }
 
 
 
