@@ -45,18 +45,52 @@ export default {
         //================================================
         // 4. Metodos
         //================================================
-        Vue.prototype.$isJson = function (str, pass_object) {
-            let isJSON = require('is-json');
-            return isJSON(str, pass_object);
-        }
-        // Vue.prototype.$setFocus = function (ref) {
-        //     //seta focus no mozilla firefox e edge principalmente
-        //     console.log(this.$refs);
 
-        //     const element = this.$refs[ref].$el.querySelector('input')
-        //     if (element) this.$nextTick(() => { element.focus() })
-        // }
+        // ACOES
+        Vue.prototype.$redirecionar = function (url) {
+            window.location.href = url;
+        }
+        // OBJETOS
+        Vue.prototype.$mesclarComponentesViaRef = function ($this, ignore=[]){
+            let vuetify_comp = $this.$refs[$this.vuetify_ref]
+
+            if( ! this.$typeof(ignore,'array')){
+                ignore = [ignore]
+            }
+
+            if(ignore.indexOf('_props')<0){
+                Object.assign(vuetify_comp._props, $this._props)
+            }
+            if(ignore.indexOf('$scopedSlots')<0){
+                Object.assign(vuetify_comp.$scopedSlots, $this.$scopedSlots)
+            }
+            if(ignore.indexOf('$slots')<0){
+                Object.assign(vuetify_comp.$slots, $this.$slots)
+            }
+            if(ignore.indexOf('_events')<0){
+                Object.assign(vuetify_comp._events, $this._events)
+            }
+
+
+        }
+        Vue.prototype.$clonarObjeto = function (obj){
+            return JSON.parse(JSON.stringify(obj));
+        }
+        Vue.prototype.$criarObjetoMensagensForm = function (mensagens, tipo, detalhes) {
+            return {
+                mensagens: mensagens,
+                tipo: tipo,
+                detalhes: detalhes
+            }
+        }
         Vue.prototype.$buscaItemDatatable = function (datatable, valor_procurado, campo_de_busca='value', case_sensitive=false) {
+            if(valor_procurado==undefined){
+                return {
+                    index: -1,
+                    result: null,
+                }
+            }
+
             if( ! case_sensitive){
                 valor_procurado = valor_procurado.toString().toUpperCase()
             }
@@ -76,21 +110,8 @@ export default {
                 result: result.length ? result[0] : null,
             }
         }
-        Vue.prototype.$redirecionar = function (url) {
-            window.location.href = url;
-        }
-        Vue.prototype.$removerAcentos = function (str) {
-            str.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-        }
-        Vue.prototype.$criarObjetoMensagensForm = function (mensagens, tipo, detalhes) {
-            return {
-                mensagens: mensagens,
-                tipo: tipo,
-                detalhes: detalhes
-            }
-        }
-        Vue.prototype.$criarObjetoParaCombobox = function (obj, campo_text, campo_value){
+        // ARRAY
+        Vue.prototype.$criarArrayParaCombobox = function (obj, campo_text, campo_value){
             let primeira_key = Object.keys(obj)[0]
             let primeiro_item = obj[primeira_key]
             let obj_valido = {}.hasOwnProperty.call(primeiro_item, campo_text) && {}.hasOwnProperty.call(primeiro_item, campo_value)
@@ -105,21 +126,12 @@ export default {
             }
             return array;
         }
-        Vue.prototype.$removerEspacos = function (string) {
-            let regex = this.$buscarRegExp('espacos')
-            return string.replace(regex, ''); //remove os espaços
-        }
-        Vue.prototype.$formataNumeroParaCartaoCredito = function (numero) {
-            var str = this.$removerEspacos(numero)
-            var numberChunks = str.match(/.{1,4}/g); //separa o numero em grupos de 4
-            var result = numberChunks.join(' ');
-            return result
-        }
         Vue.prototype.$removerElementosVaziosArray = function (array) {
             return array.filter(function (el) {
                 return !!el;
             });
         }
+        // DATE
         Vue.prototype.$passaDatetimeParaPtbr = function (datetime) {
             if(this.$buscarRegExp('datetime_us').test(datetime) || this.$buscarRegExp('date_us').test(datetime)){
                 let [date, time] = datetime.split(' ')
@@ -127,6 +139,16 @@ export default {
             }
             return datetime;
         }
+        // STRING
+        Vue.prototype.$removerEspacos = function (string) {
+            let regex = this.$buscarRegExp('espacos')
+            return string.replace(regex, ''); //remove os espaços
+        }
+        Vue.prototype.$removerAcentos = function (str) {
+            str.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        }
+        // MOEDA
         Vue.prototype.$formataNumeroParaMoeda = function (value, digits) {
             if(parseFloat(value)){
                 value = new Intl.NumberFormat('pt-BR', {
@@ -138,6 +160,14 @@ export default {
 
             return value
         }
+        // NUMEROS
+        Vue.prototype.$formataNumeroParaCartaoCredito = function (numero) {
+            var str = this.$removerEspacos(numero)
+            var numberChunks = str.match(/.{1,4}/g); //separa o numero em grupos de 4
+            var result = numberChunks.join(' ');
+            return result
+        }
+        // OUTROS
         Vue.prototype.$typeof = function (v, eTipo){
             let tipo = typeof v
             if(tipo=='object' && Array.isArray(v))
@@ -149,6 +179,21 @@ export default {
             }
             return tipo
         }
+        Vue.prototype.$isJson = function (str, pass_object) {
+            let isJSON = require('is-json');
+            return isJSON(str, pass_object);
+        }
+
+
+
+        // Vue.prototype.$setFocus = function (ref) {
+        //     //seta focus no mozilla firefox e edge principalmente
+        //     console.log(this.$refs);
+
+        //     const element = this.$refs[ref].$el.querySelector('input')
+        //     if (element) this.$nextTick(() => { element.focus() })
+        // }
+
 
 
 
